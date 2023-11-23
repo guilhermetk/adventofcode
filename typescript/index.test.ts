@@ -64,7 +64,7 @@ test("day_6 - task_1 - find position where last 4 characters are unique", () => 
   expect(find_start_position('aaaaaaaaaaaaaaaaaaaaaaaaa', 4)).toBe(-1);
 });
 
-test("day_6 - task_1 - find position where last 14 characters are unique", () => {
+test("day_6 - task_2 - find position where last 14 characters are unique", () => {
   expect(find_start_position('mjqjpqmgbljsphdztnvjfqwrcgsmlb',14)).toBe(19);
   expect(find_start_position('bvwbjplbgvbhsrlpgdmjqwftvncz', 14)).toBe(23);
   expect(find_start_position('nppdvjthqldpwncqszvftbrmjlhg', 14)).toBe(23);
