@@ -166,7 +166,7 @@ function find_highest_scenic_score(grid: number[][]): number {
     for (let column = 0; column < grid[row].length; column++) {
       const tree: Tree = { row, column };
       const tree_scenic_score = find_tree_scenic_core(tree, grid);
-      if(tree_scenic_score > highest_scenic_score){
+      if (tree_scenic_score > highest_scenic_score) {
         highest_scenic_score = tree_scenic_score;
       }
     }
@@ -188,7 +188,7 @@ function find_tree_scenic_core(tree: Tree, grid: number[][]): number {
   let bottom = 0;
   let left = 0;
   let right = 0;
-  for (let column = tree.column-1; column >= 0; column--) {
+  for (let column = tree.column - 1; column >= 0; column--) {
     left += 1;
     if (grid[tree.row][column] >= tree_value) {
       break;
@@ -220,7 +220,7 @@ function find_tree_scenic_core(tree: Tree, grid: number[][]): number {
 function task1(input: string) {
   const split_in_lines = input.split("\n");
   const tree_grid = split_in_lines.map((line) =>
-    line.split("").map((item) => +item)
+    line.split("").map((item) => +item),
   );
   console.log(find_visible_trees(tree_grid));
 }
@@ -230,7 +230,7 @@ task2(input);
 function task2(input: string) {
   const split_in_lines = input.split("\n");
   const tree_grid = split_in_lines.map((line) =>
-    line.split("").map((item) => +item)
+    line.split("").map((item) => +item),
   );
   console.log(find_highest_scenic_score(tree_grid));
 }
