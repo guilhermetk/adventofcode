@@ -3,15 +3,28 @@ package main
 import (
 	"fmt"
 	"strconv"
+	"strings"
 	"unicode"
 )
 
-func main() {
-	fmt.Println(task1())
-	fmt.Println(task2())
+var digit_map map[string]int
+
+func exec_day_1() {
+	digit_map = make(map[string]int)
+	digit_map["one"] = 1
+	digit_map["two"] = 2
+	digit_map["three"] = 3
+	digit_map["four"] = 4
+	digit_map["five"] = 5
+	digit_map["six"] = 6
+	digit_map["seven"] = 7
+	digit_map["eight"] = 8
+	digit_map["nine"] = 9
+	fmt.Println(d1_task1())
+	fmt.Println(d1_task2())
 }
 
-func task1() int {
+func d1_task1() int {
 	lines, err := read_file(1, 1, false)
 	sum := 0
 	if err == nil {
@@ -40,12 +53,11 @@ func task1() int {
 	return sum
 }
 
-func task2() int {
-	lines, err := read_file(1, 2, true)
+func d1_task2() int {
+	lines, err := read_file(1, 2, false)
 	sum := 0
 	if err == nil {
 		for _, line := range lines {
-			fmt.Println(line)
 			var first string
 			var last string
 			for i := 0; i < len(line); i++ {
@@ -56,9 +68,7 @@ func task2() int {
 
 				if first == "" {
 					first_substr := line[0 : i+1]
-					fmt.Println(first_substr)
 					matched_digit := match_digit(first_substr)
-					fmt.Println(matched_digit)
 					if matched_digit > 0 {
 						first = fmt.Sprintf("%d", matched_digit)
 					}
@@ -67,9 +77,16 @@ func task2() int {
 				if last == "" && unicode.IsDigit(rune(line[j])) {
 					last = string(line[j])
 				}
+
+				if last == "" {
+					last_substr := line[len(line)-i-1:]
+					matched_digit := match_digit(last_substr)
+					if matched_digit > 0 {
+						last = fmt.Sprintf("%d", matched_digit)
+					}
+				}
+
 				if first != "" && last != "" {
-					fmt.Println(first)
-					fmt.Println(last)
 					break
 				}
 			}
@@ -84,15 +101,10 @@ func task2() int {
 }
 
 func match_digit(str string) int {
-	var digit_map = make(map[string]int)
-	digit_map["one"] = 1
-	digit_map["two"] = 2
-	digit_map["three"] = 3
-	digit_map["four"] = 4
-	digit_map["five"] = 5
-	digit_map["six"] = 6
-	digit_map["seven"] = 7
-	digit_map["eight"] = 8
-	digit_map["nine"] = 9
-	return digit_map[str]
+	for key, value := range digit_map {
+		if strings.Contains(str, key) {
+			return value
+		}
+	}
+	return 0
 }
