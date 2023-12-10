@@ -41,6 +41,41 @@ func task1() {
 	fmt.Println(lowest)
 }
 
+func task2() {
+	blocks, _ := read_file_by_space_blocks(5, 1, false)
+	seeds := []int64{}
+	commands := [][]int64{}
+	for blockNumber, block := range blocks {
+		if blockNumber == 0 {
+			seeds = stringToUnsortedIntArray(strings.Split(block, ":")[1])
+		} else {
+			commands_string := strings.Split(block, "\n")[1:]
+			mapCommands := []int64{}
+			for _, command_string := range commands_string {
+				if command_string != "" {
+					mapCommands = append(mapCommands, stringToUnsortedIntArray(command_string)...)
+				}
+			}
+			commands = append(commands, mapCommands)
+		}
+	}
+	var lowest int64 = math.MaxInt64
+
+	for i := 0; i+1 < len(seeds); i += 2 {
+		seed := seeds[i]
+		seedRange := seeds[i+1]
+
+		for j := seed; j < seed+seedRange; j++ {
+			destination := parseSourceToDestination(j, commands, 0, 0)
+			if destination < lowest {
+				lowest = destination
+			}
+		}
+	}
+
+	fmt.Println(lowest)
+}
+
 func parseSourceToDestination(source int64, commands [][]int64, mapIndex int, commandIndex int) int64 {
 	if mapIndex > len(commands)-1 {
 		return source
