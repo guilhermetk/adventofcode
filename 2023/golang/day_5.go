@@ -8,7 +8,7 @@ import (
 )
 
 func exec_day_5() {
-	task1()
+	task2()
 }
 
 func task1() {
@@ -66,14 +66,21 @@ func task2() {
 		seedRange := seeds[i+1]
 
 		for j := seed; j < seed+seedRange; j++ {
-			destination := parseSourceToDestination(j, commands, 0, 0)
-			if destination < lowest {
-				lowest = destination
-			}
+			go goRoutine(j, commands)
 		}
 	}
 
 	fmt.Println(lowest)
+}
+
+var lowest int64 = math.MaxInt64
+
+func goRoutine(j int64, commands [][]int64) {
+	destination := parseSourceToDestination(j, commands, 0, 0)
+	if destination < lowest {
+		lowest = destination
+		fmt.Println(lowest)
+	}
 }
 
 func parseSourceToDestination(source int64, commands [][]int64, mapIndex int, commandIndex int) int64 {
