@@ -50,12 +50,14 @@ func task1(directions []string, fromTo map[string]Coordinate) {
 }
 
 func task2(directions []string, fromTo map[string]Coordinate) {
+	steps := []int{}
 	for key := range fromTo {
 		endWith := key[2:]
 		if endWith == "A" {
-			fmt.Println(getStepsCount(directions, key, fromTo, 0, 0))
+			steps = append(steps, getStepsCount(directions, key, fromTo, 0, 0))
 		}
 	}
+	fmt.Println(LCM(steps[0], steps[1], steps[2], steps[3], steps[4], steps[5]))
 }
 
 func getStepsCount(directions []string, position string, fromTo map[string]Coordinate, stepsCount int, directionCount int) int {
@@ -77,4 +79,23 @@ func getStepsCount(directions []string, position string, fromTo map[string]Coord
 		newDirection += 1
 	}
 	return getStepsCount(directions, newPosition, fromTo, stepsCount+1, newDirection)
+}
+
+func GCD(a, b int) int {
+	for b != 0 {
+		t := b
+		b = a % b
+		a = t
+	}
+	return a
+}
+
+func LCM(a, b int, integers ...int) int {
+	result := a * b / GCD(a, b)
+
+	for i := 0; i < len(integers); i++ {
+		result = LCM(result, integers[i])
+	}
+
+	return result
 }
