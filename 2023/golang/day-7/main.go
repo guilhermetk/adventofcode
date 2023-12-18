@@ -16,16 +16,16 @@ var cardOrder map[string]int = map[string]int{
 	"A": 13,
 	"K": 12,
 	"Q": 11,
-	"J": 10,
-	"T": 9,
-	"9": 8,
-	"8": 7,
-	"7": 6,
-	"6": 5,
-	"5": 4,
-	"4": 3,
-	"3": 2,
-	"2": 1,
+	"T": 10,
+	"9": 9,
+	"8": 8,
+	"7": 7,
+	"6": 6,
+	"5": 5,
+	"4": 4,
+	"3": 3,
+	"2": 2,
+	"J": 1,
 }
 
 var hands []Hand
@@ -44,7 +44,8 @@ type Hand struct {
 }
 
 func task1() {
-	// fileContent, _ := os.ReadFile("./test.txt")
+	// fileContent, _ := os.ReadFile("./edge.txt")
+	fileContent, _ := os.ReadFile("./test.txt")
 	fileContent, _ := os.ReadFile("./prod.txt")
 	lines := strings.Split(string(fileContent), "\n")
 	for _, line := range lines {
@@ -56,28 +57,27 @@ func task1() {
 			hands = append(hands, hand)
 		}
 	}
-	fmt.Println(hands)
-	slices.SortFunc(hands, func(a, b Hand) int {
-		if a.kind() < b.kind() {
-			return -1
-		}
-
-		if a.kind() > b.kind() {
-			return 1
-		}
-
-		return sortHandByCards(a, b)
-	})
+	slices.SortFunc(hands, sortByKind)
 	sum := 0
 	for i := 0; i < len(hands); i++ {
 		sum += (i + 1) * hands[i].bid
-		// fmt.Println(i+1, hands[i].cards, hands[i].bid)
+		fmt.Println(i+1, hands[i].cards, hands[i].bid, hands[i].kind())
 	}
 	fmt.Println(sum)
 }
 
+func sortByKind(a, b Hand) int {
+	if a.kind() < b.kind() {
+		return -1
+	}
+	if a.kind() > b.kind() {
+		return 1
+	}
+
+	return sortHandByCards(a, b)
+}
+
 func sortHandByCards(a, b Hand) int {
-	order := 0
 	for i := 0; i < 5; i++ {
 		aCard := cardOrder[a.cards[i]]
 		bCard := cardOrder[b.cards[i]]
@@ -88,25 +88,50 @@ func sortHandByCards(a, b Hand) int {
 			return -1
 		}
 	}
-	return order
+	return 0
 }
 
 func (h Hand) kind() int {
 	groups := map[string]int{}
+	jokers := 0
 	for _, card := range h.cards {
-		if groups[card] == 0 {
-			groups[card] = 1
+		if card != "J" {
+			if groups[card] == 0 {
+				groups[card] = 1
+			} else {
+				groups[card] += 1
+			}
+
 		} else {
-			groups[card] += 1
+			jokers++
 		}
 	}
+	fmt.Println(groups)
+	if jokers > 0 {
+		delete(groups, "J")
+		highestGroupKey := ""
+		highestGroupCount := 0
+		for key, value := range groups {
+			if value >= highestGroupCount {
+				highestGroupCount = value
+				highestGroupKey = key
+			}
+		}
+		groups[highestGroupKey] += jokers
+	}
+	fmt.Println(groups)
 	switch len(groups) {
 	case 5:
 		return 1 //high card
 	case 1:
 		return 7 // five of a kind
 	case 2:
-		if groups[h.cards[0]] == 4 || groups[h.cards[0]] == 1 {
+		var val int
+		for _, v := range groups {
+			val = v
+			break
+		}
+		if val == 4 || val == 1 {
 			return 6 // four of a kind
 		} else {
 			return 5 //full house

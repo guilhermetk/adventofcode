@@ -50,39 +50,31 @@ func task1(directions []string, fromTo map[string]Coordinate) {
 }
 
 func task2(directions []string, fromTo map[string]Coordinate) {
-	currentPositions := []string{}
 	for key := range fromTo {
 		endWith := key[2:]
 		if endWith == "A" {
-			currentPositions = append(currentPositions, key)
+			fmt.Println(getStepsCount(directions, key, fromTo, 0, 0))
 		}
 	}
-	allZZZReched := false
-	stepCount := 0
-	directionCount := 0
-	for !allZZZReched {
+}
 
-		endsZZZCount := 0
-		for i := 0; i < len(currentPositions); i++ {
-			if directions[directionCount] == "R" {
-				currentPositions[i] = fromTo[currentPositions[i]].right
-			} else {
-				currentPositions[i] = fromTo[currentPositions[i]].left
-			}
-			if currentPositions[i][2:] == "Z" {
-				endsZZZCount++
-			}
-		}
-
-		if directionCount+1 == len(directions) {
-			directionCount = 0
-		} else {
-			directionCount += 1
-		}
-		stepCount++
-		if endsZZZCount == len(currentPositions) {
-			allZZZReched = true
-		}
+func getStepsCount(directions []string, position string, fromTo map[string]Coordinate, stepsCount int, directionCount int) int {
+	if position[2:] == "Z" {
+		return stepsCount
 	}
-	fmt.Println(stepCount)
+
+	var newPosition string
+	if directions[directionCount] == "R" {
+		newPosition = fromTo[position].right
+	} else {
+		newPosition = fromTo[position].left
+	}
+
+	var newDirection = directionCount
+	if directionCount+1 == len(directions) {
+		newDirection = 0
+	} else {
+		newDirection += 1
+	}
+	return getStepsCount(directions, newPosition, fromTo, stepsCount+1, newDirection)
 }
