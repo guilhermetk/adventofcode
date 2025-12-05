@@ -10,41 +10,49 @@ import (
 
 func main() {
 	content, _ := readFile(false)
-	dial := 50
+	dialPos := 50
 	password := 0
+	zeroStepCounter := 0
 	for _, line := range content {
 		if line != "" {
 			steps := parseLine(line)
-			dial = moveDial(dial, steps)
-			fmt.Println("dial moved to: ", dial)
-			if dial == 0 {
+			newDialPos, zeroStep := moveDial(dialPos, steps)
+			fmt.Println("dial moved to: ", newDialPos)
+			zeroStepCounter += zeroStep
+			dialPos = newDialPos
+			if newDialPos == 0 {
 				password++
 			}
 		}
 	}
-	fmt.Println("password is: ", password)
+	fmt.Println("first password is: ", password)
+	fmt.Println("second password", zeroStepCounter)
 }
 
-func moveDial(dial, steps int) int {
+func moveDial(dialPos, steps int) (int, int) {
 	movedSteps := 0
+	zeroStep := 0
 	for movedSteps < abs(steps) {
 		movedSteps++
 		if steps > 0 {
-			if dial == 99 {
-				dial = 0
-				continue
+			if dialPos == 99 {
+				dialPos = 0
+			} else {
+				dialPos++
 			}
-			dial++
 		} else {
-			if dial == 0 {
-				dial = 99
-				continue
+			if dialPos == 0 {
+				dialPos = 99
+			} else {
+				dialPos--
 			}
-			dial--
+		}
+		if dialPos == 0 {
+			zeroStep++
 		}
 	}
 
-	return dial
+	return dialPos, zeroStep
 }
 
 func abs(i int) int {
