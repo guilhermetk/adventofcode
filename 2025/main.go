@@ -9,7 +9,8 @@ import (
 func main() {
 	content, _ := readFile(false)
 	// Day1(content)
-	Day2(content)
+	// Day2(content)
+	Day3(content)
 }
 
 func readFile(testInput bool) ([]string, error) {
